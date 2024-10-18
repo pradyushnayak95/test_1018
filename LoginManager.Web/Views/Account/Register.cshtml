@@ -1,0 +1,78 @@
+﻿@model LoginManager.Web.Models.RegisterViewModel
+
+
+@{
+    ViewData["Title"] = "Register";
+}
+@section Scripts {
+    @* <script src="~/js/account/register.js"></script> *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+    }
+    <script>
+        $(document).ready(function () {
+
+            function validatePassword() {
+                var password = $('#Password').val();
+                var passwordError = "";
+                var passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[a-z]).{6,}$/;
+
+                if (!passwordPattern.test(password)) {
+                    passwordError = "Password must be at least 6 characters long, with at least one capital letter, one number, and one alphabet.";
+                }
+
+                $('#passwordError').text(passwordError);
+                return passwordError === "";
+            }
+
+            // Check password validation on form submission
+            $('form').submit(function (event) {
+                if (!validatePassword()) {
+                    event.preventDefault();
+                }
+            });
+
+            // Validate password on input change
+            $('#Password').on('input', function () {
+                validatePassword();
+            });
+        });</script>
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Register</h2>
+    <div class="row justify-content-center">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger d-flex justify-content-center" })
+        <div class="col-md-6">
+            <form asp-action="Register" method="post">
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label">User Name</label>
+                    <input asp-for="Username" class="form-control" placeholder="Enter your name" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email address</label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Re-enter your password" required />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Register</button>
+            </form>
+            <p class="mt-3 text-center">
+                <a asp-controller="Account" asp-action="Login">Already have an Account?</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
